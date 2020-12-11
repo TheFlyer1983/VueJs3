@@ -1,45 +1,29 @@
 <template>
   <div>
-    <ul>
-      <resource-item
-        v-for="resource in storedResources"
-        :key="resource.id"
-        :resource="resource"
-      ></resource-item>
-    </ul>
+    <the-header title="RememberMe"></the-header>
+    <the-resource></the-resource>
   </div>
 </template>
 
 <script>
-  import ResourceItem from './components/learning-resources/ResourceItem.vue';
+  import TheResource from './components/learning-resources/TheResource.vue';
+  import TheHeader from './components/layouts/TheHeader.vue';
 
   export default {
     components: {
-      ResourceItem,
+      TheHeader,
+      TheResource,
     },
     data() {
       return {
-        storedResources: [
-          {
-            id: 'official-guide',
-            title: 'Official Guide',
-            description: 'The official Vue.js documentation.',
-            link: 'https://vuejs.org',
-          },
-          {
-            id: 'goolge',
-            title: 'Google',
-            description: 'Learn to google...',
-            link: 'https://google.com',
-          },
-        ],
+        
       };
     },
   };
 </script>
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
   * {
     box-sizing: border-box;
