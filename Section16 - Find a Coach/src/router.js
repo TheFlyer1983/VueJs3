@@ -12,10 +12,13 @@ const routes = [
   {
     path: '/coaches/:id',
     component: () => import('./pages/coaches/CoachesDetail.vue'),
-    children: {
-      path: 'contact',
-      component: () => import('./pages/requests/ContactCoach.vue'),
-    },
+    props: true,
+    children: [
+      {
+        path: 'contact',
+        component: () => import('./pages/requests/ContactCoach.vue'),
+      },
+    ],
   },
   {
     path: '/register',
@@ -32,7 +35,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory,
+  history: createWebHistory(),
   routes,
 });
 
