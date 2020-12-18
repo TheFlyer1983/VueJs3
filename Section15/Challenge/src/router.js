@@ -11,7 +11,7 @@ const router = createRouter({
     { path: '/products', component: ProductsList },
     { path: '/cart', component: UserCart },
     { path: '/admin', component: ShopAdmin },
-  ]
+  ],
 });
 
 export default router;
