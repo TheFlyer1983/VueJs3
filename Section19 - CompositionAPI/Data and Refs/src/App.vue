@@ -1,7 +1,8 @@
 <template>
   <section class="container">
-    <h2>{{ userName }}</h2>
-    <h3>{{ userAge }}</h3>
+    <h2>{{ user.name }}</h2>
+    <h3>{{ user.age }}</h3>
+    <button @click="setNewAge">Change Age</button>
   </section>
 </template>
 
@@ -16,19 +17,30 @@
         age: 37,
       });
 
-      setTimeout(() => {
-        user.name = 'Tall Paul';
-      }, 2000);
+      function setNewAge() {
+        user.age = 38;
+      }
+
+      // setTimeout(() => {
+      //   user.name = 'Tall Paul';
+      // }, 2000);
 
       return {
         user,
+        setNewAge,
       };
     },
     // data() {
     //   return {
     //     userName: 'Maximilian',
+    //     age: 38
     //   };
     // },
+    // methods: {
+    //   setNewAge() {
+    //     this.age = 38
+    //   }
+    // }
   };
 </script>
 
