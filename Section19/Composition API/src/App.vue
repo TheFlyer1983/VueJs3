@@ -1,7 +1,6 @@
 <template>
   <section class="container">
-    <h2>{{ uName }}</h2>
-    <h3>{{ uAge }}</h3>
+    <user-data :first-name="firstName" :last-name="lastName" :age="uAge"></user-data>
     <button @click="setNewAge">Change Age</button>
     <div>
       <input type="text" placeholder="First Name" v-model="firstName" />
@@ -14,8 +13,12 @@
 
 <script>
   import { ref, /*reactive,*/ computed, watch } from 'vue';
+  import UserData from './components/UserData.vue';
 
   export default {
+    components: {
+      UserData,
+    },
     setup() {
       const uAge = ref(37);
       const firstName = ref('');
@@ -60,6 +63,7 @@
         uAge,
         setNewAge,
         firstName,
+        lastName,
         lastNameInput,
         setLastName,
       };
