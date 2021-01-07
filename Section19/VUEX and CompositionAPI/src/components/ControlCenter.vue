@@ -3,11 +3,17 @@
 </template>
 
 <script>
-export default {
-  setup() {
-    function inc() {}
+  import { useStore } from 'vuex';
 
-    return { inc };
-  },
-};
+  export default {
+    setup() {
+      const store = useStore();
+
+      function inc() {
+        store.dispatch('increment');
+      }
+
+      return { inc };
+    },
+  };
 </script>

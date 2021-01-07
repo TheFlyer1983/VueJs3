@@ -3,11 +3,15 @@
 </template>
 
 <script>
-export default {
-  setup() {
-    const counter = 0;
+  import { computed } from 'vue';
+  import { useStore } from 'vuex';
+  
+  export default {
+    setup() {
+      const store = useStore();
+      const counter = computed(() => store.getters.counter);
 
-    return { counter };
-  },
-};
+      return { counter };
+    },
+  };
 </script>
