@@ -10,7 +10,9 @@
       <base-card>
         <div class="controls">
           <base-button mode="outline" @click="loadCoaches(true)">Refresh</base-button>
-          <base-button link to="/auth?redirect=register" v-if="!isLoggedIn">Login to Register as Coach</base-button>
+          <base-button link to="/auth?redirect=register" v-if="!isLoggedIn"
+            >Login to Register as Coach</base-button
+          >
           <base-button link to="/register" v-if="!isCoach && !isLoading && isLoggedIn">
             Register as Coach
           </base-button>
@@ -35,11 +37,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import { defineComponent } from 'vue';
+
   import CoachItem from '../../components/coaches/CoachItem.vue';
   import CoachFilter from '../../components/coaches/CoachFilter.vue';
 
-  export default {
+  export default defineComponent({
+    name: 'CoachesList',
     components: {
       CoachItem,
       CoachFilter,
@@ -56,15 +61,15 @@
       };
     },
     computed: {
-      isLoggedIn() {
+      isLoggedIn(): boolean {
         return this.$store.getters.isAuthenticated;
       },
-      isCoach() {
+      isCoach(): boolean {
         return this.$store.getters['coaches/isCoach'];
       },
-      filteredCoaches() {
+      filteredCoaches(): Coach[] {
         const coaches = this.$store.getters['coaches/coaches'];
-        return coaches.filter(coach => {
+        return coaches.filter((coach: { areas: Array<string> }) => {
           if (this.activeFilters.frontend && coach.areas.includes('frontend')) {
             return true;
           }
@@ -77,7 +82,7 @@
           return false;
         });
       },
-      hasCoaches() {
+      hasCoaches(): boolean {
         return !this.isLoading && this.$store.getters['coaches/hasCoaches'];
       },
     },
@@ -85,13 +90,13 @@
       this.loadCoaches();
     },
     methods: {
-      setFilters(updatedFilters) {
+      setFilters(updatedFilters: any) {
         this.activeFilters = updatedFilters;
       },
       async loadCoaches(refresh = false) {
         this.isLoading = true;
         try {
-          await this.$store.dispatch('coaches/loadCoaches', {forceRefresh: refresh});
+          await this.$store.dispatch('coaches/loadCoaches', { forceRefresh: refresh });
         } catch (error) {
           this.error = error.message || 'Something went wrong!';
         }
@@ -101,7 +106,7 @@
         this.error = null;
       },
     },
-  };
+  });
 </script>
 
 <style scoped>

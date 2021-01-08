@@ -2,8 +2,8 @@ export default {
   coaches(state: CoachesStore): Coach[] {
     return state.coaches;
   },
-  hasCoaches(state: CoachesStore) {
-    return state.coaches && state.coaches.length;
+  hasCoaches(state: CoachesStore): boolean {
+    return state.coaches && !!state.coaches.length;
   },
   isCoach(state: CoachesStore, getters: any, rootState: any, rootGetters: any): boolean {
     const coaches = getters.coaches;

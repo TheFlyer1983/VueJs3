@@ -5,7 +5,7 @@ export default {
   token(state: AuthStore) {
     return state.token;
   },
-  isAuthenticated(state: AuthStore) {
+  isAuthenticated(state: AuthStore): boolean {
     return !!state.token;
   },
   didAutoLogout(state: AuthStore) {

@@ -1,3 +1,9 @@
+interface RootStore {
+  auth: AuthStore;
+  coaches: CoachesStore;
+  requests: RequestsStore
+}
+
 interface AuthStore {
   userId: string;
   token: string;
