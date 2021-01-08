@@ -1,7 +1,7 @@
 interface AuthStore {
   userId: string;
   token: string;
-  didAutoLogout: boolean
+  didAutoLogout: boolean;
 }
 
 interface CoachesStore {
@@ -13,7 +13,18 @@ interface Coach {
   id: string;
   firstName: string;
   lastName: string;
-  areas: Array<string>
+  areas: Array<string>;
   description: string;
-  hourlyRate: number
+  hourlyRate: number;
+}
+
+interface RequestsStore {
+  requests: Request[];
+}
+
+interface Request {
+  id: string;
+  coachId: string;
+  message: string;
+  userEmail: string;
 }

@@ -1,8 +1,8 @@
 export default {
-  addRequest(state, payload) {
+  addRequest(state: RequestsStore, payload: Request) {
     state.requests.push(payload);
   },
-  setRequests(state, payload) {
+  setRequests(state: RequestsStore, payload: any) {
     state.requests = payload;
   }
 };
