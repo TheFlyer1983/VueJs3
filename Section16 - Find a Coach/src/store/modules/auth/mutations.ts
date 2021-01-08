@@ -1,10 +1,10 @@
 export default {
-  setUser(state, payload) {
+  setUser(state: any, payload: any) {
     state.token = payload.token;
     state.userId = payload.userId;
     state.didAutoLogout = false;
   },
-  setAutoLogout(state) {
+  setAutoLogout(state: AuthStore) {
     state.didAutoLogout = true;
   }
 };

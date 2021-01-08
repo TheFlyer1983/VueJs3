@@ -1,5 +1,5 @@
 export default {
-  async registerCoach(context, data) {
+  async registerCoach(context: any, data: any) {
     const userId = context.rootGetters.userId;
     const coachData = {
       // id: context.rootGetters.userId,
@@ -31,7 +31,7 @@ export default {
       id: userId,
     });
   },
-  async loadCoaches(context, payload) {
+  async loadCoaches(context: any, payload: any) {
     if (!payload.forceRefresh && !context.getters.shouldUpdate) {
       return;
     }

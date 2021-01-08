@@ -1,19 +1,19 @@
-let timer;
+let timer: number;
 
 export default {
-  async login(context, payload) {
+  async login(context: any, payload: any) {
     return context.dispatch('auth', {
       ...payload,
       mode: 'login',
     });
   },
-  async signUp(context, payload) {
+  async signUp(context: any, payload: any) {
     return context.dispatch('auth', {
       ...payload,
       mode: 'signup',
     });
   },
-  async auth(context, payload) {
+  async auth(context: any, payload: any) {
     const mode = payload.mode;
     let url =
       'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAG_ho49Rz19g2w6nF6Chisq5H2N2GZkQs';
@@ -38,7 +38,7 @@ export default {
       throw error;
     }
     const expiresIn = +responseData.expiresIn * 1000;
-    const expirationDate = new Date().getTime() + expiresIn;
+    const expirationDate: any = new Date().getTime() + expiresIn;
 
     localStorage.setItem('token', responseData.idToken);
     localStorage.setItem('userId', responseData.localId);
@@ -53,12 +53,12 @@ export default {
       userId: responseData.localId,
     });
   },
-  tryLogin(context) {
+  tryLogin(context: any) {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
-    const tokenExpiration = localStorage.getItem('tokenExpiration');
+    const tokenExpiration: string | null = localStorage.getItem('tokenExpiration');
 
-    const expiresIn = +tokenExpiration - new Date().getTime();
+    const expiresIn = +tokenExpiration! - new Date().getTime();
 
     if (expiresIn < 0) {
       return;
@@ -75,7 +75,7 @@ export default {
       });
     }
   },
-  logout(context) {
+  logout(context: any) {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('tokenExpiration');
@@ -87,7 +87,7 @@ export default {
       userId: null,
     });
   },
-  autoLogout(context) {
+  autoLogout(context: any) {
     context.dispatch('logout');
     context.commit('setAutoLogout');
   }

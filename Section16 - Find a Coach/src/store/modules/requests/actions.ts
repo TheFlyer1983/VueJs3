@@ -1,5 +1,5 @@
 export default {
-  async contactCoach(context, payload) {
+  async contactCoach(context: any, payload: any) {
     const newRequest = {
       userEmail: payload.email,
       message: payload.message,
@@ -24,7 +24,7 @@ export default {
 
     context.commit('addRequest', newRequest);
   },
-  async fetchRequests(context) {
+  async fetchRequests(context: any) {
     const coachId = context.rootGetters.userId;
     const token = context.rootGetters.token;
     const response = await fetch(
