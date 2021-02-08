@@ -28,8 +28,11 @@
   </div>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import { defineComponent } from 'vue';
+  import { Login } from '@/types/interfaces';
+
+  export default defineComponent({
     data() {
       return {
         email: '',
@@ -41,14 +44,14 @@
       };
     },
     computed: {
-      submitButtonCaption() {
+      submitButtonCaption(): string {
         if (this.mode === 'login') {
           return 'Login';
         } else {
           return 'Signup';
         }
       },
-      switchModeButtonCaption() {
+      switchModeButtonCaption(): string {
         if (this.mode === 'login') {
           return 'Signup instead';
         } else {
@@ -57,7 +60,7 @@
       },
     },
     methods: {
-      async submitForm() {
+      async submitForm(): Promise<void> {
         this.formIsValid = true;
         if (!this.email || !this.email.includes('@') || this.password.length < 6) {
           this.formIsValid = false;
@@ -66,7 +69,7 @@
 
         this.isLoading = true;
 
-        const actionPayload = {
+        const actionPayload: Login = {
           email: this.email,
           password: this.password,
         };
@@ -84,18 +87,18 @@
         }
         this.isLoading = false;
       },
-      switchAuthMode() {
+      switchAuthMode(): void {
         if (this.mode === 'login') {
           this.mode = 'signup';
         } else {
           this.mode = 'login';
         }
       },
-      handleError() {
+      handleError(): void {
         this.error = null;
       },
     },
-  };
+  });
 </script>
 
 <style scoped>

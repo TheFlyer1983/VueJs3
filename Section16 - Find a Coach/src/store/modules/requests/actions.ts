@@ -1,5 +1,10 @@
-export default {
-  async contactCoach(context: any, payload: any) {
+import { ActionTree } from 'vuex';
+import { RequestsStore, RequestStoreActions, RootState } from '@/types/interfaces';
+import { RequestActionTypes } from './action-types';
+import { RequestsMutationTypes } from './mutation-types';
+
+export const actions: ActionTree<RequestsStore, RootState> & RequestStoreActions = {
+  async [RequestActionTypes.contactCoach]({ commit }, payload: any) {
     const newRequest = {
       message: payload.message,
       userEmail: payload.email,
@@ -18,7 +23,7 @@ export default {
       const error = new Error(responseData.message || 'Failed to send request.');
       throw error;
     }
-    const Request = {
+    const request = {
       id: responseData.name,
       coachId: payload.coachId,
       ...newRequest,
@@ -26,11 +31,11 @@ export default {
     // newRequest.id = responseData.name;
     // newRequest.coachId = payload.coachId;
 
-    context.commit('addRequest', Request);
+    commit(RequestsMutationTypes.addRequest, request);
   },
-  async fetchRequests(context: any) {
-    const coachId = context.rootGetters.userId;
-    const token = context.rootGetters.token;
+  async [RequestActionTypes.fetchRequests]({ commit, rootGetters }) {
+    const coachId = rootGetters.userId;
+    const token = rootGetters.token;
     const response = await fetch(
       `https://vue-coach-856d3-default-rtdb.firebaseio.com/requests/${coachId}.json?auth=${token}`
     );
@@ -53,6 +58,6 @@ export default {
       requests.push(request);
     }
     // console.log(requests)
-    context.commit('setRequests', requests);
+    commit(RequestsMutationTypes.setRequests, requests);
   },
 };

@@ -1,16 +1,27 @@
-export default {
-  async registerCoach(context: any, data: any) {
-    const userId = context.rootGetters.userId;
+import { ActionTree } from 'vuex';
+import { CoachesMutationTypes } from './mutation-types';
+import { CoachesActionTypes } from './action-types';
+import {
+  CoachesStoreActions,
+  CoachesStore,
+  RootState,
+  Coach,
+  Coaches,
+  LoadCoaches,
+} from '@/types/interfaces';
+
+export const actions: ActionTree<CoachesStore, RootState> & CoachesStoreActions = {
+  async [CoachesActionTypes.registerCoach]({ commit, rootGetters }, data: Coach) {
+    const userId = rootGetters.userId;
     const coachData = {
-      // id: context.rootGetters.userId,
-      firstName: data.first,
-      lastName: data.last,
-      description: data.desc,
-      hourlyRate: data.rate,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      description: data.description,
+      hourlyRate: data.hourlyRate,
       areas: data.areas,
     };
 
-    const token = context.rootGetters.token;
+    const token = rootGetters.token;
 
     const response = await fetch(
       `https://vue-coach-856d3-default-rtdb.firebaseio.com/coaches/${userId}.json?auth=${token}`,
@@ -26,30 +37,33 @@ export default {
       // error ...
     }
 
-    context.commit('registerCoach', {
+    commit(CoachesMutationTypes.registerCoach, {
       ...coachData,
       id: userId,
     });
   },
-  async loadCoaches(context: any, payload: any) {
-    if (!payload.forceRefresh && !context.getters.shouldUpdate) {
+  async [CoachesActionTypes.loadCoaches]({ commit, getters}, payload: LoadCoaches): Promise<void> {
+    if (!payload.forceRefresh && getters.shouldUpdate) {
       return;
     }
 
     const response = await fetch(
       `https://vue-coach-856d3-default-rtdb.firebaseio.com/coaches.json`
     );
+
     const responseData = await response.json();
+
+    console.log(responseData);
 
     if (!response.ok) {
       const error = new Error(responseData.message || 'Failed to fetch!');
       throw error;
     }
 
-    const coaches = [];
+    const coaches: Coaches = [];
 
     for (const key in responseData) {
-      const coach = {
+      const coach: Coach = {
         id: key,
         firstName: responseData[key].firstName,
         lastName: responseData[key].lastName,
@@ -60,7 +74,7 @@ export default {
       coaches.push(coach);
     }
 
-    context.commit('setCoaches', coaches);
-    context.commit('setFetchTimestamp');
+    commit(CoachesMutationTypes.setCoaches, coaches);
+    commit(CoachesMutationTypes.setFetchTimestamp);
   },
 };

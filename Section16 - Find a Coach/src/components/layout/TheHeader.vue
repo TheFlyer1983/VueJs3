@@ -16,20 +16,23 @@
   </header>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import { defineComponent } from 'vue';
+
+  export default defineComponent ({
+    name: 'TheHeader',
     computed: {
-      isLoggedIn() {
+      isLoggedIn(): boolean {
         return this.$store.getters.isAuthenticated;
       }
     },
     methods: {
-      logout() {
+      logout(): void {
         this.$store.dispatch('logout');
         this.$router.replace('/coaches');
       }
     }
-  };
+  });
 </script>
 
 <style scoped>

@@ -1,15 +1,12 @@
-import mutations from './mutations';
-import actions from './actions';
-import getters from './getters';
+import { mutations } from './mutations';
+import { actions } from './actions';
+import { getters } from './getters';
+import { state } from './state';
+import { Module } from 'vuex';
+import { AuthStore, RootState } from '@/types/interfaces';
 
-export default {
-  state() {
-    return {
-      userId: null,
-      token: null,
-      didAutoLogout: false,
-    };
-  },
+export const authModule: Module<AuthStore, RootState> = {
+  state,
   mutations,
   actions,
   getters,

@@ -1,9 +1,12 @@
-export default {
-  requests(state: RequestsStore, getters: any, rootState: any, rootGetters: any) {
+import { RequestsStore, RequestStoreGetters, RootState } from '@/types/interfaces';
+import { GetterTree } from 'vuex';
+
+export const getters: GetterTree<RequestsStore, RootState> & RequestStoreGetters = {
+  requests(state: RequestsStore, _getters: RequestStoreGetters, _rootState: RootState, rootGetters: any) {
     const coachId = rootGetters.userId;
-    return state.requests.filter(req => req.coachId === coachId);
+    return state.requests.filter((req: { coachId: any; }) => req.coachId === coachId);
   },
-  hasRequests(state: any, getters: any) {
-    return getters.requests && getters.requests.length;
-  }
-}
+  hasRequests(_state: RequestsStore, getters: RequestStoreGetters) {
+    return getters.requests && !!getters.requests.length;
+  },
+};

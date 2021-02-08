@@ -9,29 +9,31 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import { defineComponent } from 'vue';
   import TheHeader from './components/layout/TheHeader.vue';
 
-  export default {
+  export default defineComponent({
+    name: 'App',
     components: {
       TheHeader,
     },
-    created() {
-      this.$store.dispatch('tryLogin');
+    created(): void {
+      this.$store.dispatch('tryLogin')
     },
     computed: {
-      didAutoLogout() {
+      didAutoLogout(): boolean {
         return this.$store.getters.didAutoLogout;
       },
     },
     watch: {
-      didAutoLogout(curValue, oldValue) {
+      didAutoLogout(curValue: boolean, oldValue: boolean): void {
         if (curValue && curValue !== oldValue) {
           this.$router.replace('/coaches');
         }
       },
     },
-  };
+  });
 </script>
 
 <style>

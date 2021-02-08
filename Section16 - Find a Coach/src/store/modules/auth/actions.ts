@@ -1,19 +1,24 @@
+import { Authenticate, AuthStore, AuthStoreActions, Login, RootState } from '@/types/interfaces';
+import { ActionTree } from 'vuex';
+import { AuthActionTypes } from './action-types';
+import { AuthMutationTypes } from './mutation-types';
+
 let timer: number;
 
-export default {
-  async login(context: any, payload: any) {
-    return context.dispatch('auth', {
+export const actions: ActionTree<AuthStore, RootState> & AuthStoreActions = {
+  async [AuthActionTypes.login]({ dispatch }, payload: Login) {
+    return dispatch('auth', {
       ...payload,
       mode: 'login',
     });
   },
-  async signUp(context: any, payload: any) {
-    return context.dispatch('auth', {
+  async [AuthActionTypes.signUp]({ dispatch }, payload: Login) {
+    return dispatch('auth', {
       ...payload,
       mode: 'signup',
     });
   },
-  async auth(context: any, payload: any) {
+  async [AuthActionTypes.auth]({ commit, dispatch }, payload: Authenticate) {
     const mode = payload.mode;
     let url =
       'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAG_ho49Rz19g2w6nF6Chisq5H2N2GZkQs';
@@ -45,50 +50,50 @@ export default {
     localStorage.setItem('tokenExpiration', expirationDate);
 
     timer = setTimeout(() => {
-      context.dispatch('autoLogout');
+      dispatch(AuthActionTypes.autoLogout);
     }, expiresIn);
 
-    context.commit('setUser', {
+    commit(AuthMutationTypes.setUser, {
       token: responseData.idToken,
-      userId: responseData.localId,
+      userId: responseData.userId,
     });
   },
-  tryLogin(context: any) {
+  [AuthActionTypes.tryLogin]({ commit, dispatch }): void {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
     const tokenExpiration: string | null = localStorage.getItem('tokenExpiration');
 
     const expiresIn = +tokenExpiration! - new Date().getTime();
 
-    if (expiresIn < 0) {
-      return;
-    }
+    // if (expiresIn < 0) {
+    //   return;
+    // }
 
     timer = setTimeout(() => {
-      context.dispatch('autoLogout');
+      dispatch(AuthActionTypes.autoLogout);
     }, expiresIn);
 
     if (token && userId) {
-      context.commit('setUser', {
+      commit(AuthMutationTypes.setUser, {
         token: token,
         userId: userId,
       });
     }
   },
-  logout(context: any) {
+  [AuthActionTypes.logout]( { commit }): void {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('tokenExpiration');
 
     clearTimeout(timer);
 
-    context.commit('setUser', {
+    commit(AuthMutationTypes.setUser, {
       token: null,
       userId: null,
     });
   },
-  autoLogout(context: any) {
-    context.dispatch('logout');
-    context.commit('setAutoLogout');
-  }
+  [AuthActionTypes.autoLogout]({ commit, dispatch }): void {
+    dispatch(AuthActionTypes.logout);
+    commit(AuthMutationTypes.setAutoLogout);
+  },
 };

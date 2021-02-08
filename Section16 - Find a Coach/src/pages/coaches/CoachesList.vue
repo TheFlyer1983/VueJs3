@@ -42,6 +42,7 @@
 
   import CoachItem from '../../components/coaches/CoachItem.vue';
   import CoachFilter from '../../components/coaches/CoachFilter.vue';
+  import { Coaches } from '@/types/interfaces';
 
   export default defineComponent({
     name: 'CoachesList',
@@ -67,7 +68,7 @@
       isCoach(): boolean {
         return this.$store.getters['coaches/isCoach'];
       },
-      filteredCoaches(): Coach[] {
+      filteredCoaches(): Coaches {
         const coaches = this.$store.getters['coaches/coaches'];
         return coaches.filter((coach: { areas: Array<string> }) => {
           if (this.activeFilters.frontend && coach.areas.includes('frontend')) {
@@ -86,14 +87,14 @@
         return !this.isLoading && this.$store.getters['coaches/hasCoaches'];
       },
     },
-    created() {
+    created(): void {
       this.loadCoaches();
     },
     methods: {
       setFilters(updatedFilters: any) {
         this.activeFilters = updatedFilters;
       },
-      async loadCoaches(refresh = false) {
+      async loadCoaches(refresh = false): Promise<void> {
         this.isLoading = true;
         try {
           await this.$store.dispatch('coaches/loadCoaches', { forceRefresh: refresh });

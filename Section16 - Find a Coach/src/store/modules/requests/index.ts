@@ -1,14 +1,13 @@
-import mutations from './mutations';
-import actions from './actions';
-import getters from './getters';
+import { mutations } from './mutations';
+import { actions } from './actions';
+import { getters } from './getters';
+import { state } from './state';
+import { Module } from 'vuex';
+import { RequestsStore, RootState } from '@/types/interfaces';
 
-export default {
+export const requestsModule: Module<RequestsStore, RootState> = {
   namespaced: true,
-  state() {
-    return {
-      requests: [],
-    };
-  },
+  state,
   mutations,
   actions,
   getters,

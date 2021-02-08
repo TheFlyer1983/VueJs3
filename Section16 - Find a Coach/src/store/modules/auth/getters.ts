@@ -1,14 +1,17 @@
-export default {
-  userId(state: AuthStore): string {
+import { GetterTree } from "vuex";
+import { AuthStore, AuthStoreGetters, RootState } from "@/types/interfaces";
+
+export const getters: GetterTree<AuthStore, RootState> & AuthStoreGetters = {
+  userId(state: AuthStore) {
     return state.userId;
   },
-  token(state: AuthStore): string {
+  token(state: AuthStore) {
     return state.token;
   },
-  isAuthenticated(state: AuthStore): boolean {
+  isAuthenticated(state: AuthStore) {
     return !!state.token;
   },
-  didAutoLogout(state: AuthStore): boolean {
+  didAutoLogout(state: AuthStore) {
     return state.didAutoLogout;
   },
 };

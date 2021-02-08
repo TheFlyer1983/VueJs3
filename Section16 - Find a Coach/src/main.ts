@@ -12,15 +12,12 @@ import BaseSpinner from '@/components/UI/BaseSpinner.vue';
 
 const BaseDialog = defineAsyncComponent(() => import('@/components/UI/BaseDialog.vue'));
 
-const app = createApp(App);
-
-app.use(router);
-app.use(store);
-
-app.component('base-card', BaseCard);
-app.component('base-button', BaseButton);
-app.component('base-badge', BaseBadge);
-app.component('base-spinner', BaseSpinner);
-app.component('base-dialog', BaseDialog);
-
-app.mount('#app');
+createApp(App)
+  .use(router)
+  .use(store)
+  .component('base-card', BaseCard)
+  .component('base-button', BaseButton)
+  .component('base-badge', BaseBadge)
+  .component('base-spinner', BaseSpinner)
+  .component('base-dialog', BaseDialog)
+  .mount('#app');
