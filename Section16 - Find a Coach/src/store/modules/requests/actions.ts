@@ -1,10 +1,15 @@
 import { ActionTree } from 'vuex';
-import { RequestsStore, RequestStoreActions, RootState } from '@/types/interfaces';
+import {
+  RequestsModuleState,
+  RequestStoreActions,
+  RequestsActionContext,
+  RootState,
+} from '@/types/interfaces';
 import { RequestActionTypes } from './action-types';
 import { RequestsMutationTypes } from './mutation-types';
 
-export const actions: ActionTree<RequestsStore, RootState> & RequestStoreActions = {
-  async [RequestActionTypes.contactCoach]({ commit }, payload: any) {
+export const actions: ActionTree<RequestsModuleState, RootState> & RequestStoreActions = {
+  async [RequestActionTypes.contactCoach]({ commit }: RequestsActionContext, payload: any) {
     const newRequest = {
       message: payload.message,
       userEmail: payload.email,
@@ -33,7 +38,7 @@ export const actions: ActionTree<RequestsStore, RootState> & RequestStoreActions
 
     commit(RequestsMutationTypes.addRequest, request);
   },
-  async [RequestActionTypes.fetchRequests]({ commit, rootGetters }) {
+  async [RequestActionTypes.fetchRequests]({ commit, rootGetters }: RequestsActionContext) {
     const coachId = rootGetters.userId;
     const token = rootGetters.token;
     const response = await fetch(

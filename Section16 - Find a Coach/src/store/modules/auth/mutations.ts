@@ -1,14 +1,14 @@
-import { MutationTree } from "vuex";
-import { AuthStore, AuthStoreMutations, SetUser } from "@/types/interfaces";
-import { AuthMutationTypes } from "./mutation-types";
+import { MutationTree } from 'vuex';
+import { AuthModuleState, AuthStoreMutations, SetUser } from '@/types/interfaces';
+import { AuthMutationTypes } from './mutation-types';
 
-export const mutations: MutationTree<AuthStore> & AuthStoreMutations = {
-  [AuthMutationTypes.setUser](state: AuthStore, payload: SetUser) {
+export const mutations: MutationTree<AuthModuleState> & AuthStoreMutations = {
+  [AuthMutationTypes.setUser](state: AuthModuleState, payload: SetUser) {
     state.token = payload.token;
     state.userId = payload.userId;
     state.didAutoLogout = false;
   },
-  [AuthMutationTypes.setAutoLogout](state: AuthStore) {
+  [AuthMutationTypes.setAutoLogout](state: AuthModuleState) {
     state.didAutoLogout = true;
-  }
+  },
 };

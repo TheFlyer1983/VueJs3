@@ -1,33 +1,38 @@
-import { ActionContext } from 'vuex';
+import { Module, ActionContext } from 'vuex';
 import { CoachesMutationTypes as CoachesMutations } from '@/store/modules/coaches/mutation-types';
 import { CoachesActionTypes as CoachesActions } from '@/store/modules/coaches/action-types';
 import { RequestsMutationTypes as RequestsMutations } from '@/store/modules/requests/mutation-types';
 import { RequestActionTypes as RequestActions } from '@/store/modules/requests/action-types';
 import { AuthMutationTypes as AuthtMutations } from '@/store/modules/auth/mutation-types';
-import { AuthActionTypes as AuthActions, AuthActionTypes } from '@/store/modules/auth/action-types';
-// import { AuthStore } from './types';
+import { AuthActionTypes as AuthActions } from '@/store/modules/auth/action-types';
 
 export interface RootState {
   root: boolean;
   version: string;
 }
 
-export interface CoachesStore {
+export interface CoachesModuleState {
   lastFetch: number | null;
   coaches: Coaches;
 }
 
-export interface RequestsStore {
+export interface RequestsModuleState {
   requests: Requests;
 }
 
-export interface AuthStore {
+export interface AuthModuleState {
   userId: string | null;
   token: string | null;
   didAutoLogout: boolean;
 }
 
-export type Coaches = Array<Coach>;
+export type CoachesModule = Module<CoachesModuleState, RootState>;
+export type RequestsModule = Module<RequestsModuleState, RootState>;
+export type AuthModule = Module<AuthModuleState, RootState>;
+
+export type CoachesActionContext = ActionContext<CoachesModuleState, {}>;
+export type RequestsActionContext = ActionContext<RequestsModuleState, {}>;
+export type AuthActionContext = ActionContext<AuthModuleState, {}>;
 
 export interface Coach {
   id: string;
@@ -38,7 +43,7 @@ export interface Coach {
   hourlyRate: number;
 }
 
-export type Requests = Array<Request>;
+export type Coaches = Array<Coach>;
 
 export interface Request {
   id: string;
@@ -46,6 +51,8 @@ export interface Request {
   message: string;
   userEmail: string;
 }
+
+export type Requests = Array<Request>;
 
 export interface SetUser {
   token: string | null;
@@ -62,105 +69,75 @@ export interface Authenticate extends Login {
 }
 
 export interface CoachesStoreGetters {
-  coaches(state: CoachesStore): Coaches;
-  hasCoaches(state: CoachesStore): boolean;
+  coaches(state: CoachesModuleState): Coaches;
+  hasCoaches(state: CoachesModuleState): boolean;
   isCoach(
-    state: CoachesStore,
-    getters: CoachesStoreGetters,
+    state: CoachesModuleState,
+    getters: any,
     rootState: RootState,
     rootGetters: RootState
   ): boolean;
-  shouldUpdate(state: CoachesStore): boolean;
+  shouldUpdate(state: CoachesModuleState): boolean;
 }
 
 export interface RequestStoreGetters {
   requests(
-    state: RequestsStore,
+    state: RequestsModuleState,
     getters: RequestStoreGetters,
     rootState: RootState,
     rootGetters: any
   ): Requests;
-  hasRequests(state: RequestsStore, getters: RequestStoreGetters): boolean;
+  hasRequests(state: RequestsModuleState, getters: RequestStoreGetters): boolean;
 }
 
 export interface AuthStoreGetters {
-  userId(state: AuthStore): string | null;
-  token(state: AuthStore): string | null;
-  isAuthenticated(state: AuthStore): boolean;
-  didAutoLogout(state: AuthStore): boolean;
+  userId(state: AuthModuleState): string | null;
+  token(state: AuthModuleState): string | null;
+  isAuthenticated(state: AuthModuleState): boolean;
+  didAutoLogout(state: AuthModuleState): boolean;
 }
 
 export interface LoadCoaches {
   forceRefresh: boolean;
 }
 
-export type CoachesStoreMutations<S = CoachesStore> = {
+export type CoachesStoreMutations<S = CoachesModuleState> = {
   [CoachesMutations.registerCoach](state: S, payload: Coach): void;
   [CoachesMutations.setCoaches](state: S, payload: Coaches): void;
   [CoachesMutations.setFetchTimestamp](state: S): void;
 };
 
-export type RequestsStoreMutations<S = RequestsStore> = {
+export type RequestsStoreMutations<S = RequestsModuleState> = {
   [RequestsMutations.addRequest](state: S, payload: Request): void;
   [RequestsMutations.setRequests](state: S, payload: any): void;
 };
 
-export type AuthStoreMutations<S = AuthStore> = {
+export type AuthStoreMutations<S = AuthModuleState> = {
   [AuthtMutations.setUser](state: S, payload: SetUser): void;
   [AuthtMutations.setAutoLogout](state: S): void;
 };
 
-export type CoachesAugmentedActionContext = {
-  commit<K extends keyof CoachesStoreMutations>(
-    key: K,
-    payload?: Parameters<CoachesStoreMutations[K]>[1]
-  ): ReturnType<CoachesStoreMutations[K]>;
-} & Omit<ActionContext<CoachesStore, RootState>, 'commit'>;
-
-export type RequestsAugmentedActionContext = {
-  commit<K extends keyof RequestsStoreMutations>(
-    key: K,
-    payload?: Parameters<RequestsStoreMutations[K]>[1]
-  ): ReturnType<RequestsStoreMutations[K]>;
-} & Omit<ActionContext<RequestsStore, RootState>, 'commit'>;
-
-export type AuthAugmentedActionContext = {
-  commit<K extends keyof AuthStoreMutations>(
-    key: K,
-    payload?: Parameters<AuthStoreMutations[K]>[1]
-  ): ReturnType<AuthStoreMutations[K]>;
-  dispatch<K extends keyof AuthStoreActions>(
-    key: K,
-    payload?: Parameters<AuthStoreActions[K]>[1]
-  ): ReturnType<AuthStoreActions[K]>;
-} & Omit<ActionContext<AuthStore, RootState>, 'commit'>;
-
 export interface CoachesStoreActions {
   [CoachesActions.registerCoach](
-    { commit }: CoachesAugmentedActionContext,
-    { rootGetters }: any,
+    { commit, rootGetters }: CoachesActionContext,
     payload: Coach
   ): Promise<void>;
   [CoachesActions.loadCoaches](
-    { commit }: CoachesAugmentedActionContext,
-    { getters }: any,
+    { commit, getters }: CoachesActionContext,
     payload: LoadCoaches
   ): Promise<void>;
 }
 
 export interface RequestStoreActions {
-  [RequestActions.contactCoach](
-    { commit }: RequestsAugmentedActionContext,
-    payload: Request
-  ): Promise<void>;
-  [RequestActions.fetchRequests]({ commit }: RequestsAugmentedActionContext): Promise<void>;
+  [RequestActions.contactCoach]({ commit }: RequestsActionContext, payload: Request): Promise<void>;
+  [RequestActions.fetchRequests]({ commit }: RequestsActionContext): Promise<void>;
 }
 
 export interface AuthStoreActions {
-  [AuthActions.login]({ commit }: AuthAugmentedActionContext, payload: Login): Promise<void>;
-  [AuthActions.signUp]({ commit }: AuthAugmentedActionContext, payload: Login): Promise<void>;
-  [AuthActions.auth]({ commit }: AuthAugmentedActionContext, payload: Authenticate): Promise<void>;
-  [AuthActions.tryLogin]({ commit }: AuthAugmentedActionContext): void;
-  [AuthActions.logout]({ commit }: AuthAugmentedActionContext): void;
-  [AuthActions.autoLogout]({ commit }: AuthAugmentedActionContext): void;
+  [AuthActions.login]({ commit }: AuthActionContext, payload: Login): Promise<void>;
+  [AuthActions.signUp]({ commit }: AuthActionContext, payload: Login): Promise<void>;
+  [AuthActions.auth]({ commit }: AuthActionContext, payload: Authenticate): Promise<void>;
+  [AuthActions.tryLogin]({ commit }: AuthActionContext): void;
+  [AuthActions.logout]({ commit }: AuthActionContext): void;
+  [AuthActions.autoLogout]({ commit }: AuthActionContext): void;
 }

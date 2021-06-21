@@ -3,15 +3,19 @@ import { CoachesMutationTypes } from './mutation-types';
 import { CoachesActionTypes } from './action-types';
 import {
   CoachesStoreActions,
-  CoachesStore,
+  CoachesModuleState,
+  CoachesActionContext,
   RootState,
   Coach,
   Coaches,
   LoadCoaches,
 } from '@/types/interfaces';
 
-export const actions: ActionTree<CoachesStore, RootState> & CoachesStoreActions = {
-  async [CoachesActionTypes.registerCoach]({ commit, rootGetters }, data: Coach) {
+export const actions: ActionTree<CoachesModuleState, RootState> & CoachesStoreActions = {
+  async [CoachesActionTypes.registerCoach](
+    { commit, rootGetters }: CoachesActionContext,
+    data: Coach
+  ) {
     const userId = rootGetters.userId;
     const coachData = {
       firstName: data.firstName,
@@ -42,7 +46,10 @@ export const actions: ActionTree<CoachesStore, RootState> & CoachesStoreActions 
       id: userId,
     });
   },
-  async [CoachesActionTypes.loadCoaches]({ commit, getters}, payload: LoadCoaches): Promise<void> {
+  async [CoachesActionTypes.loadCoaches](
+    { commit, getters }: CoachesActionContext,
+    payload: LoadCoaches
+  ): Promise<void> {
     if (!payload.forceRefresh && getters.shouldUpdate) {
       return;
     }

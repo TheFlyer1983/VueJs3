@@ -1,15 +1,15 @@
 import { MutationTree } from 'vuex';
-import { CoachesMutationTypes } from './mutation-types'
-import { Coach, Coaches, CoachesStore, CoachesStoreMutations } from '@/types/interfaces';
+import { CoachesMutationTypes } from './mutation-types';
+import { Coach, Coaches, CoachesModuleState, CoachesStoreMutations } from '@/types/interfaces';
 
-export const mutations: MutationTree<CoachesStore> & CoachesStoreMutations = {
-  [CoachesMutationTypes.registerCoach](state: CoachesStore, payload: Coach) {
+export const mutations: MutationTree<CoachesModuleState> & CoachesStoreMutations = {
+  [CoachesMutationTypes.registerCoach](state: CoachesModuleState, payload: Coach) {
     state.coaches.push(payload);
   },
-  [CoachesMutationTypes.setCoaches](state: CoachesStore, payload: Coaches) {
+  [CoachesMutationTypes.setCoaches](state: CoachesModuleState, payload: Coaches) {
     state.coaches = payload;
   },
-  [CoachesMutationTypes.setFetchTimestamp](state: CoachesStore) {
+  [CoachesMutationTypes.setFetchTimestamp](state: CoachesModuleState) {
     state.lastFetch = new Date().getTime();
   },
 };

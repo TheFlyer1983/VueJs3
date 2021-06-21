@@ -1,28 +1,24 @@
-import { Coaches, CoachesStore, CoachesStoreGetters, RootState } from '@/types/interfaces';
+import { Coaches, CoachesModuleState, CoachesStoreGetters, RootState } from '@/types/interfaces';
 import { GetterTree } from 'vuex';
 
-export const getters: GetterTree<CoachesStore, RootState> & CoachesStoreGetters = {
-  coaches(state: CoachesStore) {
+export const getters: GetterTree<CoachesModuleState, RootState> & CoachesStoreGetters = {
+  coaches(state: CoachesModuleState): Coaches {
     return state.coaches;
   },
-  hasCoaches(state: CoachesStore) {
+  hasCoaches(state: CoachesModuleState): boolean {
     return state.coaches && !!state.coaches.length;
   },
   isCoach(
-    state: CoachesStore,
-    getters: CoachesStoreGetters,
-    rootState: RootState,
+    _state: CoachesModuleState,
+    getters: any,
+    _rootState: RootState,
     rootGetters: any
-   ) {
-    console.log('rootGetters', rootGetters, typeof rootGetters);
-    console.log('getters', getters, typeof getters);
-    console.log('rootState', rootState, typeof rootState);
-    const coaches: Coaches = getters.coaches;
-    console.log(typeof coaches)
+  ): boolean {
+    const coaches: Coaches= getters.coaches;
     const userId = rootGetters.userId;
     return coaches.some((coach: { id: string }) => coach.id === userId);
   },
-  shouldUpdate(state: CoachesStore) {
+  shouldUpdate(state: CoachesModuleState): boolean {
     const lastFetch = state.lastFetch;
     if (!lastFetch) {
       return true;

@@ -2,10 +2,9 @@ import { mutations } from './mutations';
 import { actions } from './actions';
 import { getters } from './getters';
 import { state } from './state';
-import { Module } from 'vuex';
-import { RequestsStore, RootState } from '@/types/interfaces';
+import { RequestsModule } from '@/types/interfaces';
 
-export const requestsModule: Module<RequestsStore, RootState> = {
+export const requestsModule: RequestsModule = {
   namespaced: true,
   state,
   mutations,

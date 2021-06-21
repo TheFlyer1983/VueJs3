@@ -1,6 +1,6 @@
-import { CoachesStore } from '@/types/interfaces';
+import { CoachesModuleState } from '@/types/interfaces';
 
-export const state: CoachesStore = {
+export const state: CoachesModuleState = {
   lastFetch: null,
   coaches: [
     {

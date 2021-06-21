@@ -1,6 +1,6 @@
-import { AuthStore } from '@/types/interfaces';
+import { AuthModuleState } from '@/types/interfaces';
 
-export const state: AuthStore = {
+export const state: AuthModuleState = {
   userId: null,
   token: null,
   didAutoLogout: false,

@@ -1,24 +1,23 @@
-import { Authenticate, AuthStore, AuthStoreActions, Login, RootState } from '@/types/interfaces';
-import { ActionTree } from 'vuex';
+import { Authenticate, AuthActionContext, Login } from '@/types/interfaces';
 import { AuthActionTypes } from './action-types';
 import { AuthMutationTypes } from './mutation-types';
 
 let timer: number;
 
-export const actions: ActionTree<AuthStore, RootState> & AuthStoreActions = {
-  async [AuthActionTypes.login]({ dispatch }, payload: Login) {
+export const actions = {
+  async [AuthActionTypes.login]({ dispatch }: AuthActionContext, payload: Login) {
     return dispatch('auth', {
       ...payload,
       mode: 'login',
     });
   },
-  async [AuthActionTypes.signUp]({ dispatch }, payload: Login) {
+  async [AuthActionTypes.signUp]({ dispatch }: AuthActionContext, payload: Login) {
     return dispatch('auth', {
       ...payload,
       mode: 'signup',
     });
   },
-  async [AuthActionTypes.auth]({ commit, dispatch }, payload: Authenticate) {
+  async [AuthActionTypes.auth]({ commit, dispatch }: AuthActionContext, payload: Authenticate) {
     const mode = payload.mode;
     let url =
       'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAG_ho49Rz19g2w6nF6Chisq5H2N2GZkQs';
@@ -58,7 +57,7 @@ export const actions: ActionTree<AuthStore, RootState> & AuthStoreActions = {
       userId: responseData.userId,
     });
   },
-  [AuthActionTypes.tryLogin]({ commit, dispatch }): void {
+  [AuthActionTypes.tryLogin]({ commit, dispatch }: AuthActionContext ): void {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
     const tokenExpiration: string | null = localStorage.getItem('tokenExpiration');
@@ -80,7 +79,7 @@ export const actions: ActionTree<AuthStore, RootState> & AuthStoreActions = {
       });
     }
   },
-  [AuthActionTypes.logout]( { commit }): void {
+  [AuthActionTypes.logout]( { commit }: AuthActionContext): void {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('tokenExpiration');
@@ -92,7 +91,7 @@ export const actions: ActionTree<AuthStore, RootState> & AuthStoreActions = {
       userId: null,
     });
   },
-  [AuthActionTypes.autoLogout]({ commit, dispatch }): void {
+  [AuthActionTypes.autoLogout]({ commit, dispatch }: AuthActionContext): void {
     dispatch(AuthActionTypes.logout);
     commit(AuthMutationTypes.setAutoLogout);
   },

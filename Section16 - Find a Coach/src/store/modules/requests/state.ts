@@ -1,6 +1,5 @@
-import { RequestsStore } from '@/types/interfaces';
+import { RequestsModuleState } from '@/types/interfaces';
 
-export const state: RequestsStore = {
-  // namespaced: true,
+export const state: RequestsModuleState = {
   requests: [],
 };
