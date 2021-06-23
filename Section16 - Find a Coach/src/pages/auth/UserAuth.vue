@@ -29,74 +29,94 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue';
-  import { Login } from '@/types/interfaces';
+  import { defineComponent, ref, computed } from 'vue';
+  import { useStore } from 'vuex';
+  import { useRouter, useRoute } from 'vue-router';
+  // import { Login } from '@/types/interfaces';
+  import { AuthActionTypes } from '@/store/modules/auth/action-types';
 
   export default defineComponent({
-    data() {
-      return {
-        email: '',
-        password: '',
-        formIsValid: true,
-        mode: 'login',
-        isLoading: false,
-        error: null,
-      };
-    },
-    computed: {
-      submitButtonCaption(): string {
-        if (this.mode === 'login') {
+    name: 'UserAuth',
+    setup() {
+      const store = useStore();
+      const router = useRouter();
+      const route = useRoute();
+
+      const email = ref('');
+      const password = ref('');
+      const formIsValid = ref(true);
+      const mode = ref('login');
+      const isLoading = ref(false);
+      const error = ref(null);
+
+      const submitButtonCaption = computed(() => {
+        if (mode.value === 'login') {
           return 'Login';
         } else {
           return 'Signup';
         }
-      },
-      switchModeButtonCaption(): string {
-        if (this.mode === 'login') {
+      });
+
+      const switchModeButtonCaption = computed(() => {
+        if (mode.value === 'login') {
           return 'Signup instead';
         } else {
           return 'Login instead';
         }
-      },
-    },
-    methods: {
-      async submitForm(): Promise<void> {
-        this.formIsValid = true;
-        if (!this.email || !this.email.includes('@') || this.password.length < 6) {
-          this.formIsValid = false;
+      });
+
+      async function submitForm(): Promise<void> {
+        formIsValid.value = true;
+        if (!email.value || !email.value.includes('@') || password.value.length < 6) {
+          formIsValid.value = false;
           return;
         }
 
-        this.isLoading = true;
+        isLoading.value = true;
 
-        const actionPayload: Login = {
-          email: this.email,
-          password: this.password,
+        const actionPayload = {
+          email: email.value,
+          password: password.value,
         };
-
         try {
-          if (this.mode === 'login') {
-            await this.$store.dispatch('login', actionPayload);
+          if (mode.value === 'login') {
+            await store.dispatch(`auth/${AuthActionTypes.login}`, actionPayload);
           } else {
-            await this.$store.dispatch('signUp', actionPayload);
+            await store.dispatch(`auth/${AuthActionTypes.signUp}`, actionPayload);
           }
-          const redirectUrl = '/' + (this.$route.query.redirect || 'coaches');
-          this.$router.replace(redirectUrl);
+          const redirectUrl = `/${route.query.redirect || 'coaches'}`;
+          router.replace(redirectUrl);
         } catch (err) {
-          this.error = err.message || 'Failed to authenticate, try later';
+          error.value = err.message || 'Failed to authenticate, try later';
         }
-        this.isLoading = false;
-      },
-      switchAuthMode(): void {
-        if (this.mode === 'login') {
-          this.mode = 'signup';
+        isLoading.value = false;
+      }
+
+      function switchAuthMode(): void {
+        if (mode.value === 'login') {
+          mode.value = 'signup';
         } else {
-          this.mode = 'login';
+          mode.value = 'login';
         }
-      },
-      handleError(): void {
-        this.error = null;
-      },
+      }
+
+      function handleError(): void {
+        error.value = null;
+      }
+
+      return {
+        email,
+        password,
+        formIsValid,
+        mode,
+        isLoading,
+        error,
+        submitButtonCaption,
+        switchModeButtonCaption,
+        submitForm,
+        switchAuthMode,
+        handleError,
+      };
     },
   });
 </script>

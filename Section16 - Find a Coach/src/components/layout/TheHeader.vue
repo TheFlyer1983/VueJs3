@@ -17,21 +17,27 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, computed } from 'vue';
+  import { useStore } from 'vuex';
+  import { useRouter } from 'vue-router';
 
-  export default defineComponent ({
+  import { AuthActionTypes } from '@/store/modules/auth/action-types';
+
+  export default defineComponent({
     name: 'TheHeader',
-    computed: {
-      isLoggedIn(): boolean {
-        return this.$store.getters.isAuthenticated;
+    setup() {
+      const store = useStore();
+      const router = useRouter();
+
+      const isLoggedIn = computed(() => store.getters[`auth/isAuthenticated`]);
+
+      function logout(): void {
+        store.dispatch(`auth/${AuthActionTypes.logout}`);
+        router.replace('/coaches');
       }
+
+      return { isLoggedIn, logout };
     },
-    methods: {
-      logout(): void {
-        this.$store.dispatch('logout');
-        this.$router.replace('/coaches');
-      }
-    }
   });
 </script>
 

@@ -74,77 +74,81 @@
   </form>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import { defineComponent, reactive, ref } from 'vue';
+
+  export default defineComponent({
+    name: 'CoachForm',
     emits: ['save-data'],
-    data() {
-      return {
-        firstName: {
-          val: '',
-          isValid: true,
-        },
-        lastName: {
-          val: '',
-          isValid: true,
-        },
-        description: {
-          val: '',
-          isValid: true,
-        },
-        rate: {
-          val: null,
-          isValid: true,
-        },
-        areas: {
-          val: [],
-          isValid: true,
-        },
-        formIsValid: true,
-      };
-    },
-    methods: {
-      validateForm() {
-        this.formIsValid = true;
-        if (this.firstName.val === '') {
-          this.firstName.isValid = false;
-          this.formIsValid = false;
+    setup(_props, context) {
+      const firstName = reactive({
+        val: '',
+        isValid: true,
+      });
+      const lastName = reactive({
+        val: '',
+        isValid: true,
+      });
+      const description = reactive({
+        val: '',
+        isValid: true,
+      });
+      const rate = reactive({
+        val: null,
+        isValid: true,
+      });
+      const areas = reactive({
+        val: [],
+        isValid: true,
+      });
+      const formIsValid = ref(true);
+
+      function validateForm() {
+        formIsValid.value = true;
+        if (firstName.val === '') {
+          firstName.isValid = false;
+          formIsValid.value = false;
         }
-        if (this.lastName.val === '') {
-          this.lastName.isValid = false;
-          this.formIsValid = false;
+        if (lastName.val === '') {
+          lastName.isValid = false;
+          formIsValid.value = false;
         }
-        if (this.description.val === '') {
-          this.description.isValid = false;
-          this.formIsValid = false;
+        if (description.val === '') {
+          description.isValid = false;
+          formIsValid.value = false;
         }
-        if (!this.rate.val || this.rate.val < 0) {
-          this.rate.isValid = false;
-          this.formIsValid = false;
+        if (!rate.val || rate.val <= 0) {
+          rate.isValid = false;
+          formIsValid.value = false
         }
-        if (!this.areas.val.length) {
-          this.areas.isValid = false;
-          this.formIsValid = false;
+        if (!areas.val.length) {
+          areas.isValid = false;
+          formIsValid.value = false;
         }
-      },
-      clearValidity(input) {
+      }
+
+      function clearValidity(input) {
         this[input].isValid = true;
-      },
-      submitForm() {
-        this.validateForm();
-        if (!this.formIsValid) {
+      }
+
+      function submitForm() {
+        validateForm();
+        if (!formIsValid.value) {
           return;
         }
         const formData = {
-          first: this.firstName.val,
-          last: this.lastName.val,
-          desc: this.description.val,
-          rate: this.rate.val,
-          areas: this.areas.val,
+          first: firstName.val,
+          last: lastName.val,
+          desc: description.val,
+          rate: rate.val,
+          areas: areas.val,
         };
-        this.$emit('save-data', formData);
-      },
+        context.emit('save-data', formData)
+      }
+
+      return { firstName, lastName, description, rate, areas, formIsValid, validateForm, clearValidity, submitForm};
     },
-  };
+  });
 </script>
 
 <style scoped>

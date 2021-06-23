@@ -7,8 +7,11 @@
   </router-link>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import { defineComponent } from 'vue';
+
+  export default defineComponent({
+    name: 'BaseButton',
     props: {
       mode: {
         type: String,
@@ -26,7 +29,7 @@
         default: '/',
       },
     },
-  };
+  });
 </script>
 
 <style scoped>

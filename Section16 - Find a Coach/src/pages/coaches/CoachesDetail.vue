@@ -24,37 +24,32 @@
   </div>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import { defineComponent, computed } from 'vue';
+  import { useRoute } from 'vue-router';
+  import { useStore } from 'vuex';
+  
+  export default defineComponent({
+    name: 'CoachesDetail',
     props: ['id'],
-    data() {
-      return {
-        selectedCoach: null,
-      };
+    setup(props) {
+      const store = useStore();
+      const route = useRoute();
+
+      const selectedCoach = computed(() => store.getters['coaches/coaches'].find((coach: { id: any; }) => coach.id === props.id));
+
+      const fullName = computed(
+        () => `${selectedCoach.value.firstName} ${selectedCoach.value.lastName}`
+      );
+
+      const contactLink = computed(() => `${route.path}/contact`);
+      const areas = computed(() => selectedCoach.value.areas);
+      const rate = computed(() => selectedCoach.value.hourlyRate);
+      const description = computed(() => selectedCoach.value.description);
+
+      return { selectedCoach, fullName, contactLink, areas, rate, description };
     },
-    computed: {
-      fullName() {
-        return this.selectedCoach.firstName + ' ' + this.selectedCoach.lastName;
-      },
-      contactLink() {
-        return this.$route.path + '/contact';
-      },
-      areas() {
-        return this.selectedCoach.areas;
-      },
-      rate() {
-        return this.selectedCoach.hourlyRate;
-      },
-      description() {
-        return this.selectedCoach.description;
-      },
-    },
-    created() {
-      return (this.selectedCoach = this.$store.getters['coaches/coaches'].find(
-        coach => coach.id === this.id
-      ));
-    },
-  };
+  });
 </script>
 
 <style></style>

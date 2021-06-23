@@ -15,32 +15,42 @@
   </form>
 </template>
 
-<script>
-  export default {
-    data() {
-      return {
-        email: '',
-        message: '',
-        formIsValid: true,
-      };
-    },
-    methods: {
-      submitForm() {
-        this.formIsValid = true;
-        if (!this.email || !this.email.includes('@') || !this.message) {
-          this.formIsValud = true;
+<script lang="ts">
+  import { defineComponent, ref } from 'vue';
+  import { useStore } from 'vuex';
+  import { useRoute, useRouter } from 'vue-router';
+
+  import { RequestActionTypes } from '@/store/modules/requests/action-types';
+
+  export default defineComponent({
+    name: 'ContactCoach',
+    setup() {
+      const store = useStore();
+      const route = useRoute();
+      const router = useRouter();
+
+      const email = ref('');
+      const message = ref('');
+      const formIsValid = ref(true);
+
+      function submitForm() {
+        formIsValid.value = true;
+        if (!email.value || !email.value.includes('@') || !message.value) {
+          formIsValid.value = true;
           return;
         }
 
-        this.$store.dispatch('requests/contactCoach', {
-          coachId: this.$route.params.id,
-          email: this.email,
-          message: this.message,
+        store.dispatch(`requests/${RequestActionTypes.contactCoach}`, {
+          coachId: route.params.id,
+          email: email.value,
+          message: message.value,
         });
-        this.$router.replace('/coaches');
-      },
+        router.replace('/coaches');
+      }
+
+      return { email, message, formIsValid, submitForm };
     },
-  };
+  });
 </script>
 
 <style scoped>

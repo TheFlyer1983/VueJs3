@@ -12,21 +12,25 @@
   </li>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import { defineComponent, computed } from 'vue';
+  import { useRoute } from 'vue-router';
+
+  export default defineComponent({
+    name: 'CoachItem',
     props: ['id', 'firstName', 'lastName', 'rate', 'areas'],
-    computed: {
-      fullName() {
-        return this.firstName + ' ' + this.lastName;
-      },
-      coachContactLink() {
-        return this.coachDetailsLink + '/contact';
-      },
-      coachDetailsLink() {
-        return this.$route.path + "/" + this.id;
-      },
+    setup(props) {
+      const route = useRoute();
+
+      const fullName = computed(() => `${props.firstName} ${props.lastName}`);
+
+      const coachDetailsLink = computed(() => `${route.path}/${props.id}`);
+
+      const coachContactLink = computed(() => `${coachDetailsLink.value}/contact`);
+
+      return { fullName, coachDetailsLink, coachContactLink };
     },
-  };
+  });
 </script>
 
 <style scoped>

@@ -60,8 +60,6 @@ export const actions: ActionTree<CoachesModuleState, RootState> & CoachesStoreAc
 
     const responseData = await response.json();
 
-    console.log(responseData);
-
     if (!response.ok) {
       const error = new Error(responseData.message || 'Failed to fetch!');
       throw error;
