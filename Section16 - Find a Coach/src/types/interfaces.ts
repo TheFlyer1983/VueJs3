@@ -136,7 +136,7 @@ export interface RequestStoreActions {
 export interface AuthStoreActions {
   [AuthActions.login]({ commit }: AuthActionContext, payload: Login): Promise<void>;
   [AuthActions.signUp]({ commit }: AuthActionContext, payload: Login): Promise<void>;
-  [AuthActions.auth]({ commit }: AuthActionContext, payload: Authenticate): Promise<void>;
+  [AuthActions.auth]({ commit, dispatch }: AuthActionContext, payload: Authenticate): Promise<void>;
   [AuthActions.tryLogin]({ commit }: AuthActionContext): void;
   [AuthActions.logout]({ commit }: AuthActionContext): void;
   [AuthActions.autoLogout]({ commit }: AuthActionContext): void;

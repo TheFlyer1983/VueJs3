@@ -10,28 +10,34 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, computed, watch, onMounted } from 'vue';
+  import { useStore } from 'vuex';
+  import { useRouter } from 'vue-router';
+
   import TheHeader from './components/layout/TheHeader.vue';
+
+  import { AuthActionTypes } from '@/store/modules/auth/action-types';
 
   export default defineComponent({
     name: 'App',
     components: {
       TheHeader,
     },
-    created(): void {
-      this.$store.dispatch('tryLogin')
-    },
-    computed: {
-      didAutoLogout(): boolean {
-        return this.$store.getters.didAutoLogout;
-      },
-    },
-    watch: {
-      didAutoLogout(curValue: boolean, oldValue: boolean): void {
+    setup() {
+      const store = useStore();
+      const router = useRouter();
+
+      onMounted(() => store.dispatch(`auth/${AuthActionTypes.tryLogin}`));
+
+      const didAutoLogout = computed(() => store.getters[`auth/didAutoLogout`]);
+
+      watch(didAutoLogout, (curValue: boolean, oldValue: boolean) => {
         if (curValue && curValue !== oldValue) {
-          this.$router.replace('/coaches');
+          router.replace('/coaches');
         }
-      },
+      });
+
+      return { didAutoLogout };
     },
   });
 </script>
