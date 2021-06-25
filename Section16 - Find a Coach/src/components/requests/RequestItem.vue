@@ -16,7 +16,7 @@
     setup(props) {
       const emailLink = computed(() => `mailto:${props.email}`);
 
-      return emailLink;
+      return { emailLink };
     },
   });
 </script>

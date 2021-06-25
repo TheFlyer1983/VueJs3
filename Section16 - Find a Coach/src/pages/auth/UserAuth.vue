@@ -33,7 +33,7 @@
   import { useStore } from 'vuex';
   import { useRouter, useRoute } from 'vue-router';
   // import { Login } from '@/types/interfaces';
-  import { AuthActionTypes } from '@/store/modules/auth/action-types';
+  import { AuthActions } from '@/store/modules/auth/types';
 
   export default defineComponent({
     name: 'UserAuth',
@@ -80,9 +80,9 @@
         };
         try {
           if (mode.value === 'login') {
-            await store.dispatch(`auth/${AuthActionTypes.login}`, actionPayload);
+            await store.dispatch(`auth/${AuthActions.login}`, actionPayload);
           } else {
-            await store.dispatch(`auth/${AuthActionTypes.signUp}`, actionPayload);
+            await store.dispatch(`auth/${AuthActions.signUp}`, actionPayload);
           }
           const redirectUrl = `/${route.query.redirect || 'coaches'}`;
           router.replace(redirectUrl);

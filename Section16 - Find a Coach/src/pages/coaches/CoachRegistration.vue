@@ -17,7 +17,7 @@
   import { routerPaths } from '@/router/router-paths';
 
   import CoachForm from '../../components/coaches/CoachForm.vue';
-  import { CoachesActionTypes } from '@/store/modules/coaches/action-types';
+  import { CoachesActions } from '@/store/modules/coaches/types';
 
   export default defineComponent({
     name: 'CoachRegistration',
@@ -29,7 +29,7 @@
       const router = useRouter();
 
       function saveData(data: any): void {
-        store.dispatch(`coaches/${CoachesActionTypes.registerCoach}`, data);
+        store.dispatch(`coaches/${CoachesActions.registerCoach}`, data);
         router.replace(routerPaths.coaches.path);
       }
 

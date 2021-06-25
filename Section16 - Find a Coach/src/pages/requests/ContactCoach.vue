@@ -20,7 +20,7 @@
   import { useStore } from 'vuex';
   import { useRoute, useRouter } from 'vue-router';
 
-  import { RequestActionTypes } from '@/store/modules/requests/action-types';
+  import { RequestActions } from '@/store/modules/requests/types';
 
   export default defineComponent({
     name: 'ContactCoach',
@@ -40,7 +40,7 @@
           return;
         }
 
-        store.dispatch(`requests/${RequestActionTypes.contactCoach}`, {
+        store.dispatch(`requests/${RequestActions.contactCoach}`, {
           coachId: route.params.id,
           email: email.value,
           message: message.value,

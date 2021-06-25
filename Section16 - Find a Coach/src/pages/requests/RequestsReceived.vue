@@ -27,7 +27,8 @@
   import { defineComponent, ref, computed, onMounted } from 'vue';
   import { useStore } from 'vuex';
 
-  import RequestItem from '../../components/requests/RequestItem.vue';
+  import RequestItem from '@/components/requests/RequestItem.vue';
+  import { RequestGetters } from '@/store/modules/requests/types';
 
   export default defineComponent({
     name: 'RequestsReceived',
@@ -40,8 +41,8 @@
       const isLoading = ref(false);
       const error = ref(null);
 
-      const receivedRequests = computed(() => store.getters['requests/requests']);
-      const hasRequests = computed(() => store.getters['requests/hasRequests']);
+      const receivedRequests = computed(() => store.getters[`requests/${RequestGetters.requests}`]);
+      const hasRequests = computed(() => store.getters[`requests/${RequestGetters.hasRequests}`]);
 
       function handleError() {
         error.value = null;
