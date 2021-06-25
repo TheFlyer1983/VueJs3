@@ -23,44 +23,47 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import { defineComponent, ref, computed, onMounted } from 'vue';
+  import { useStore } from 'vuex';
+
   import RequestItem from '../../components/requests/RequestItem.vue';
-  export default {
+
+  export default defineComponent({
+    name: 'RequestsReceived',
     components: {
       RequestItem,
     },
-    data() {
-      return {
-        isLoading: false,
-        error: null,
-      };
-    },
-    computed: {
-      receivedRequests() {
-        return this.$store.getters['requests/requests'];
-      },
-      hasRequests() {
-        return this.$store.getters['requests/hasRequests'];
-      },
-    },
-    created() {
-      this.loadRequests();
-    },
-    methods: {
-      async loadRequests() {
-        this.isLoading = true;
+    setup() {
+      const store = useStore();
+
+      const isLoading = ref(false);
+      const error = ref(null);
+
+      const receivedRequests = computed(() => store.getters['requests/requests']);
+      const hasRequests = computed(() => store.getters['requests/hasRequests']);
+
+      function handleError() {
+        error.value = null;
+      }
+
+      onMounted(() => {
+        loadRequests();
+      });
+
+      async function loadRequests() {
+        isLoading.value = true;
         try {
-          await this.$store.dispatch('requests/fetchRequests');
+          await store.dispatch('requests/fetchRequests');
         } catch (error) {
-          this.error = error.message || 'Something failed!';
+          error.value = error.message || 'Something failed';
         }
-        this.isLoading = false;
-      },
-      handleError() {
-        this.error = null;
-      },
+        isLoading.value = false;
+      }
+
+      return { isLoading, error, receivedRequests, hasRequests, loadRequests, handleError };
     },
-  };
+  });
 </script>
 
 <style scoped>

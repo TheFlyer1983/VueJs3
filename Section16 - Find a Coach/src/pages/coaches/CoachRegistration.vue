@@ -9,19 +9,33 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import { defineComponent } from 'vue';
+  import { useStore } from 'vuex';
+  import { useRouter } from 'vue-router';
+
+  import { routerPaths } from '@/router/router-paths';
+
   import CoachForm from '../../components/coaches/CoachForm.vue';
-  export default {
+  import { CoachesActionTypes } from '@/store/modules/coaches/action-types';
+
+  export default defineComponent({
+    name: 'CoachRegistration',
     components: {
       CoachForm,
     },
-    methods: {
-      saveData(data) {
-        this.$store.dispatch('coaches/registerCoach', data);
-        this.$router.replace('/coaches');
-      },
+    setup() {
+      const store = useStore();
+      const router = useRouter();
+
+      function saveData(data: any): void {
+        store.dispatch(`coaches/${CoachesActionTypes.registerCoach}`, data);
+        router.replace(routerPaths.coaches.path);
+      }
+
+      return { saveData };
     },
-  };
+  });
 </script>
 
 <style></style>

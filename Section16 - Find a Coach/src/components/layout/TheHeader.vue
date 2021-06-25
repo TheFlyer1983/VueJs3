@@ -16,20 +16,29 @@
   </header>
 </template>
 
-<script>
-  export default {
-    computed: {
-      isLoggedIn() {
-        return this.$store.getters.isAuthenticated;
+<script lang="ts">
+  import { defineComponent, computed } from 'vue';
+  import { useStore } from 'vuex';
+  import { useRouter } from 'vue-router';
+
+  import { AuthActionTypes } from '@/store/modules/auth/action-types';
+
+  export default defineComponent({
+    name: 'TheHeader',
+    setup() {
+      const store = useStore();
+      const router = useRouter();
+
+      const isLoggedIn = computed(() => store.getters[`auth/isAuthenticated`]);
+
+      function logout(): void {
+        store.dispatch(`auth/${AuthActionTypes.logout}`);
+        router.replace('/coaches');
       }
+
+      return { isLoggedIn, logout };
     },
-    methods: {
-      logout() {
-        this.$store.dispatch('logout');
-        this.$router.replace('/coaches');
-      }
-    }
-  };
+  });
 </script>
 
 <style scoped>

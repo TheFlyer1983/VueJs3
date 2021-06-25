@@ -21,8 +21,11 @@
   </teleport>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import { defineComponent } from 'vue';
+
+  export default defineComponent({
+    name: 'BaseDialog',
     props: {
       show: {
         type: Boolean,
@@ -39,15 +42,17 @@
       },
     },
     emits: ['close'],
-    methods: {
-      tryClose() {
-        if (this.fixed) {
+    setup(props, context) {
+      function tryClose() {
+        if (props.fixed) {
           return;
         }
-        this.$emit('close');
-      },
+        context.emit('close');
+      }
+
+      return { tryClose };
     },
-  };
+  });
 </script>
 
 <style scoped>

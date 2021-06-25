@@ -16,31 +16,27 @@
   </base-card>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import { defineComponent } from 'vue';
+
+  export default defineComponent({
+    name: 'CoachFilter',
     emits: ['change-filter'],
-    data() {
-      return {
-        filters: {
-          frontend: true,
-          backend: true,
-          career: true,
-        },
-      };
-    },
-    methods: {
-      setFilter(event) {
+    props: ['filters'],
+    setup(props, context) {
+      function setFilter(event: any) {
         const inputId = event.target.id;
         const isActive = event.target.checked;
         const updatedFilters = {
-          ...this.filters,
+          ...props.filters,
           [inputId]: isActive,
         };
-        this.filters = updatedFilters;
-        this.$emit('change-filter', updatedFilters);
-      },
+        context.emit('change-filter', updatedFilters)
+      }
+
+      return { setFilter };
     },
-  };
+  });
 </script>
 
 <style scoped>
