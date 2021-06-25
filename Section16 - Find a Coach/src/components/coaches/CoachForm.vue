@@ -6,7 +6,6 @@
         type="text"
         id="firstname"
         v-model.trim="firstName.val"
-        @blur="clearValidity('firstName')"
       />
       <p v-if="!firstName.isValid">First Name must not be empty.</p>
     </div>
@@ -16,7 +15,6 @@
         type="text"
         id="lastname"
         v-model.trim="lastName.val"
-        @blur="clearValidity('lastName')"
       />
       <p v-if="!lastName.isValid">Last Name must not be empty.</p>
     </div>
@@ -26,13 +24,12 @@
         id="description"
         rows="5"
         v-model.trim="description.val"
-        @blur="clearValidity('description')"
       ></textarea>
       <p v-if="!description.isValid">Description must not be empty.</p>
     </div>
     <div class="form-control" :class="{ invalid: !rate.isValid }">
       <label for="rate">Hourly Rate</label>
-      <input type="number" id="rate" v-model.number="rate.val" @blur="clearValidity('rate')" />
+      <input type="number" id="rate" v-model.number="rate.val" />
       <p v-if="!rate.isValid">Rate must be greater than 0.</p>
     </div>
     <div class="form-control" :class="{ invalid: !areas.isValid }">
@@ -43,7 +40,6 @@
           id="frontend"
           value="frontend"
           v-model="areas.val"
-          @blur="clearValidity('areas')"
         />
         <label for="frontend">Frontend Development</label>
       </div>
@@ -53,7 +49,6 @@
           id="backend"
           value="backend"
           v-model="areas.val"
-          @blur="clearValidity('areas')"
         />
         <label for="backend">Backend Development</label>
       </div>
@@ -63,7 +58,6 @@
           id="career"
           value="career"
           v-model="areas.val"
-          @blur="clearValidity('areas')"
         />
         <label for="carrer">Career Advisory</label>
       </div>
@@ -75,12 +69,12 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, reactive, ref } from 'vue';
+  import { defineComponent, reactive, ref, watch } from 'vue';
 
   export default defineComponent({
     name: 'CoachForm',
     emits: ['save-data'],
-    setup(_props, context) {
+    setup(props, context) {
       const firstName = reactive({
         val: '',
         isValid: true,
@@ -94,7 +88,7 @@
         isValid: true,
       });
       const rate = reactive({
-        val: null,
+        val: 0,
         isValid: true,
       });
       const areas = reactive({
@@ -119,7 +113,7 @@
         }
         if (!rate.val || rate.val <= 0) {
           rate.isValid = false;
-          formIsValid.value = false
+          formIsValid.value = false;
         }
         if (!areas.val.length) {
           areas.isValid = false;
@@ -127,9 +121,35 @@
         }
       }
 
-      function clearValidity(input) {
-        this[input].isValid = true;
-      }
+      watch(firstName, () => {
+        if (firstName.val !== ''){
+          firstName.isValid = true;
+        }
+      })
+
+      watch(lastName, () => {
+        if (lastName.val !== ''){
+          lastName.isValid = true;
+        }
+      })
+
+      watch(description, () => {
+        if (description.val !== ''){
+          description.isValid = true;
+        }
+      })
+
+      watch(rate, () => {
+        if (rate.val){
+          rate.isValid = true;
+        }
+      })
+
+      watch(areas, () => {
+        if (areas.val.length) {
+          areas.isValid = true;
+        }
+      })
 
       function submitForm() {
         validateForm();
@@ -143,10 +163,19 @@
           rate: rate.val,
           areas: areas.val,
         };
-        context.emit('save-data', formData)
+        context.emit('save-data', formData);
       }
 
-      return { firstName, lastName, description, rate, areas, formIsValid, validateForm, clearValidity, submitForm};
+      return {
+        firstName,
+        lastName,
+        description,
+        rate,
+        areas,
+        formIsValid,
+        validateForm,
+        submitForm,
+      };
     },
   });
 </script>

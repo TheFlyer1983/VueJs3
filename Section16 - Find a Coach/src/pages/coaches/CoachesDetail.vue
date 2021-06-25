@@ -28,7 +28,9 @@
   import { defineComponent, computed } from 'vue';
   import { useRoute } from 'vue-router';
   import { useStore } from 'vuex';
-  
+
+  import { routerPaths } from '@/router/router-paths';
+
   export default defineComponent({
     name: 'CoachesDetail',
     props: ['id'],
@@ -36,13 +38,15 @@
       const store = useStore();
       const route = useRoute();
 
-      const selectedCoach = computed(() => store.getters['coaches/coaches'].find((coach: { id: any; }) => coach.id === props.id));
+      const selectedCoach = computed(() =>
+        store.getters['coaches/coaches'].find((coach: { id: any }) => coach.id === props.id)
+      );
 
       const fullName = computed(
         () => `${selectedCoach.value.firstName} ${selectedCoach.value.lastName}`
       );
 
-      const contactLink = computed(() => `${route.path}/contact`);
+      const contactLink = computed(() => `${route.path}/${routerPaths.contact.path}`);
       const areas = computed(() => selectedCoach.value.areas);
       const rate = computed(() => selectedCoach.value.hourlyRate);
       const description = computed(() => selectedCoach.value.description);
@@ -51,5 +55,3 @@
     },
   });
 </script>
-
-<style></style>

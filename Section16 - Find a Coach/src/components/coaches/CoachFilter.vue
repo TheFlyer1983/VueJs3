@@ -17,30 +17,24 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, reactive } from 'vue';
+  import { defineComponent } from 'vue';
 
   export default defineComponent({
     name: 'CoachFilter',
     emits: ['change-filter'],
-    setup(_props, context) {
-      const filters = reactive({
-        frontend: true,
-        backend: true,
-        career: true,
-      });
-
-      function setFilter(event) {
+    props: ['filters'],
+    setup(props, context) {
+      function setFilter(event: any) {
         const inputId = event.target.id;
         const isActive = event.target.checked;
         const updatedFilters = {
-          ...filters,
+          ...props.filters,
           [inputId]: isActive,
         };
-        filters[inputId] = isActive;
         context.emit('change-filter', updatedFilters)
       }
 
-      return { filters, setFilter };
+      return { setFilter };
     },
   });
 </script>

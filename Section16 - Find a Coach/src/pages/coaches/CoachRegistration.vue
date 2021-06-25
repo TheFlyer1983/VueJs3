@@ -14,6 +14,8 @@
   import { useStore } from 'vuex';
   import { useRouter } from 'vue-router';
 
+  import { routerPaths } from '@/router/router-paths';
+
   import CoachForm from '../../components/coaches/CoachForm.vue';
   import { CoachesActionTypes } from '@/store/modules/coaches/action-types';
 
@@ -28,7 +30,7 @@
 
       function saveData(data: any): void {
         store.dispatch(`coaches/${CoachesActionTypes.registerCoach}`, data);
-        router.replace('/coaches');
+        router.replace(routerPaths.coaches.path);
       }
 
       return { saveData };

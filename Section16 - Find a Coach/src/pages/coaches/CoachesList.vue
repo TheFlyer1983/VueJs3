@@ -4,16 +4,16 @@
       <p>{{ error }}</p>
     </base-dialog>
     <section>
-      <coach-filter @change-filter="setFilters"></coach-filter>
+      <coach-filter @change-filter="setFilters" :filters="activeFilters"></coach-filter>
     </section>
     <section>
       <base-card>
         <div class="controls">
           <base-button mode="outline" @click="loadCoaches(true)">Refresh</base-button>
-          <base-button link to="/auth?redirect=register" v-if="!isLoggedIn"
+          <base-button link :to="`${routerPaths.auth.path}?redirect=register`" v-if="!isLoggedIn"
             >Login to Register as Coach</base-button
           >
-          <base-button link to="/register" v-if="!isCoach && !isLoading && isLoggedIn">
+          <base-button link :to="routerPaths.register.path" v-if="!isCoach && !isLoading && isLoggedIn">
             Register as Coach
           </base-button>
         </div>
@@ -41,9 +41,11 @@
   import { defineComponent, ref, reactive, computed, onMounted } from 'vue';
   import { useStore } from 'vuex';
 
-  import CoachItem from '../../components/coaches/CoachItem.vue';
-  import CoachFilter from '../../components/coaches/CoachFilter.vue';
+  import CoachItem from '@/components/coaches/CoachItem.vue';
+  import CoachFilter from '@/components/coaches/CoachFilter.vue';
   import { CoachesActionTypes } from '@/store/modules/coaches/action-types';
+
+  import { routerPaths } from '@/router/router-paths'
 
   export default defineComponent({
     name: 'CoachesList',
@@ -82,7 +84,7 @@
         });
       });
 
-      function setFilters(updatedFilters: any) {
+      function setFilters(updatedFilters: typeof activeFilters) {
         activeFilters.frontend = updatedFilters.frontend;
         activeFilters.backend = updatedFilters.backend;
         activeFilters.career = updatedFilters.career;
@@ -111,6 +113,7 @@
       }
 
       return {
+        routerPaths,
         isLoading,
         error,
         activeFilters,

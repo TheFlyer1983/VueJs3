@@ -17,6 +17,7 @@
   import TheHeader from './components/layout/TheHeader.vue';
 
   import { AuthActionTypes } from '@/store/modules/auth/action-types';
+  import { routerPaths } from '@/router/router-paths';
 
   export default defineComponent({
     name: 'App',
@@ -33,7 +34,7 @@
 
       watch(didAutoLogout, (curValue: boolean, oldValue: boolean) => {
         if (curValue && curValue !== oldValue) {
-          router.replace('/coaches');
+          router.replace(routerPaths.coaches.path);
         }
       });
 
