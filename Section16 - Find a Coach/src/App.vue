@@ -16,7 +16,7 @@
 
   import TheHeader from './components/layout/TheHeader.vue';
 
-  import { AuthActionTypes } from '@/store/modules/auth/action-types';
+  import { AuthActions } from '@/store/modules/auth/types';
   import { routerPaths } from '@/router/router-paths';
 
   export default defineComponent({
@@ -28,7 +28,7 @@
       const store = useStore();
       const router = useRouter();
 
-      onMounted(() => store.dispatch(`auth/${AuthActionTypes.tryLogin}`));
+      onMounted(() => store.dispatch(`auth/${AuthActions.tryLogin}`));
 
       const didAutoLogout = computed(() => store.getters[`auth/didAutoLogout`]);
 

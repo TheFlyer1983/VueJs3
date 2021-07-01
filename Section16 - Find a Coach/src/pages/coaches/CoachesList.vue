@@ -13,7 +13,11 @@
           <base-button link :to="`${routerPaths.auth.path}?redirect=register`" v-if="!isLoggedIn"
             >Login to Register as Coach</base-button
           >
-          <base-button link :to="routerPaths.register.path" v-if="!isCoach && !isLoading && isLoggedIn">
+          <base-button
+            link
+            :to="routerPaths.register.path"
+            v-if="!isCoach && !isLoading && isLoggedIn"
+          >
             Register as Coach
           </base-button>
         </div>
@@ -43,9 +47,10 @@
 
   import CoachItem from '@/components/coaches/CoachItem.vue';
   import CoachFilter from '@/components/coaches/CoachFilter.vue';
-  import { CoachesActionTypes } from '@/store/modules/coaches/action-types';
+  import { CoachesActions, CoachesGetters } from '@/store/modules/coaches/types';
 
-  import { routerPaths } from '@/router/router-paths'
+  import { routerPaths } from '@/router/router-paths';
+  import { AuthGetters } from '@/store/modules/auth/types';
 
   export default defineComponent({
     name: 'CoachesList',
@@ -64,12 +69,12 @@
         career: true,
       });
 
-      const isLoggedIn = computed(() => store.getters[`auth/isAuthenticated`]);
+      const isLoggedIn = computed(() => store.getters[`auth/${AuthGetters.isAuthenticated}`]);
 
-      const isCoach = computed(() => store.getters[`coaches/isCoach`]);
+      const isCoach = computed(() => store.getters[`coaches/${CoachesGetters.isCoach}`]);
 
       const filteredCoaches = computed(() => {
-        const coaches = store.getters[`coaches/coaches`];
+        const coaches = store.getters[`coaches/${CoachesGetters.coaches}`];
         return coaches.filter((coach: { areas: Array<string> }) => {
           if (activeFilters.frontend && coach.areas.includes('frontend')) {
             return true;
@@ -90,7 +95,9 @@
         activeFilters.career = updatedFilters.career;
       }
 
-      const hasCoaches = computed(() => !isLoading.value && store.getters[`coaches/coaches`]);
+      const hasCoaches = computed(
+        () => !isLoading.value && store.getters[`coaches/${CoachesGetters.coaches}`]
+      );
 
       onMounted(() => {
         loadCoaches(true);
@@ -99,7 +106,7 @@
       async function loadCoaches(refresh = false): Promise<void> {
         isLoading.value = true;
         try {
-          await store.dispatch(`coaches/${CoachesActionTypes.loadCoaches}`, {
+          await store.dispatch(`coaches/${CoachesActions.loadCoaches}`, {
             forceRefresh: refresh,
           });
         } catch (err) {

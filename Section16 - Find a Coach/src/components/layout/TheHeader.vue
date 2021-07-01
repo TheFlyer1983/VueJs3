@@ -21,7 +21,7 @@
   import { useStore } from 'vuex';
   import { useRouter } from 'vue-router';
 
-  import { AuthActionTypes } from '@/store/modules/auth/action-types';
+  import { AuthActions } from '@/store/modules/auth/types';
 
   export default defineComponent({
     name: 'TheHeader',
@@ -32,7 +32,7 @@
       const isLoggedIn = computed(() => store.getters[`auth/isAuthenticated`]);
 
       function logout(): void {
-        store.dispatch(`auth/${AuthActionTypes.logout}`);
+        store.dispatch(`auth/${AuthActions.logout}`);
         router.replace('/coaches');
       }
 

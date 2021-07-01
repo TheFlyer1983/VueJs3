@@ -30,6 +30,7 @@
   import { useStore } from 'vuex';
 
   import { routerPaths } from '@/router/router-paths';
+import { CoachesGetters } from '@/store/modules/coaches/types';
 
   export default defineComponent({
     name: 'CoachesDetail',
@@ -39,7 +40,7 @@
       const route = useRoute();
 
       const selectedCoach = computed(() =>
-        store.getters['coaches/coaches'].find((coach: { id: any }) => coach.id === props.id)
+        store.getters[`coaches/${CoachesGetters.coaches}`].find((coach: { id: any }) => coach.id === props.id)
       );
 
       const fullName = computed(
